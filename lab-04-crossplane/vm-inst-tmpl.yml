@@ -6,6 +6,7 @@ metadata:
   annotations:
     crossplane.io/external-name: $NET_ID
 spec:
+  deletionPolicy: Orphan
   forProvider:
     name: $NET_NAME
     folderId: $FOLDER_ID
@@ -18,6 +19,7 @@ metadata:
   annotations:
     crossplane.io/external-name: $SUBNET_ID
 spec:
+  deletionPolicy: Orphan
   forProvider:
     name: $NET_NAME-$ZONE_ID
     networkIdRef:

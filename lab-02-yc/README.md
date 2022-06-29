@@ -4,7 +4,7 @@
 * 2.1 [Клонирование репозитория практикума на ВМ](#h2-1)
 * 2.2 [Настройка профиля YC CLI](#h2-2)
 * 2.3 [Просмотр облачных ресурсов - подсети, ВМ](#h2-3)
-* 2.4 [Создание ВМ с веб-сервером (LEMP stack)](#h2-4)
+* 2.4 [Создание ВМ с веб-сервером](#h2-4)
 * 2.5 [Тестирование работы веб-сервера](#h2-5)
 * 2.6 [Удаление ВМ с веб-сервером](#h2-6)
 
@@ -35,7 +35,7 @@ FOLDER_ID=$(yc compute instance get $VM_ID --format=json | jq -r .folder_id)
 CLOUD_ID=$(yc resource folder get $FOLDER_ID --format=json | jq -r .cloud_id)
 ```
 
-Создаём профиль с именем `default` для работы с Yandex Cloud с помощью инструмента `yc`:
+Создаём профиль с именем `default` для инструмента `yc`:
 ```bash
 yc config profile create default
 yc config set cloud-id $CLOUD_ID
@@ -88,16 +88,24 @@ yc compute instance get --name=infra-vm
 yc compute instance get --name=infra-vm --format=json | jq
 ```
 
-### 2.4 Создание ВМ с веб-сервером (LEMP stack) <a id="h2-4"/></a>
+### 2.4 Создание ВМ с веб-сервером <a id="h2-4"/></a>
 
+В данной части будет создаваться ВМ на базе [LEMP стека](https://lempstack.com/).
+
+Создать пару SSH ключей, для аутентификации на ВМ
 ```bash
-
 ssh-keygen -t rsa -b 2048 -f $HOME/.ssh/id_rsa -q -N ""
+```
 
+Подготовить входные данные для создвания ВМ с веб-сервером
+```bash
 YC_ZONE="ru-central1-b"
 YC_NET=$(yc vpc network list --limit=1 --format=json | jq -r .[0].name)
 YC_SUBNET=$YC_NET-$YC_ZONE
+```
 
+Создать ВМ с веб-сервером
+```bash
 yc compute instance create --name=lemp-vm --hostname=lemp-vm\
   --zone $YC_ZONE \
   --create-boot-disk image-folder-id=standard-images,image-family=lemp \
@@ -108,20 +116,27 @@ yc compute instance create --name=lemp-vm --hostname=lemp-vm\
 
 ### 2.5 Тестирование работы веб-сервера <a id="h2-5"/></a>
 
-Проверим работу web-сервера:
+Убедиться в том, что ВМ с веб-сервером создана
 ```bash
 yc compute instance list
-
-# Сохранить IP адрес созданной ВМ в переменной окружения
+```
+Сохранить IP адрес созданной ВМ в переменной окружения
+```bash
 LEMP_IP=$(yc compute instance get --name=lemp-vm --format=json | jq -r .network_interfaces[0].primary_v4_address.address)
+```
 
-# Проверить доступность ВМ
-ping $LEMP_IP
+Проверить сетевую доступность ВМ
+```bash
+ping -c 3 $LEMP_IP
+```
 
-# Проверить работу сервера nginx на ВМ
+Проверить работу веб-сервера на ВМ
+```bash
 curl http://$LEMP_IP
+```
 
-# Подключиться к ВМ c nginx по SSH
+Подключиться к ВМ c веб-сервером по SSH
+```bash
 ssh yc-user@$LEMP_IP
 exit
 ```
@@ -143,12 +158,12 @@ ssh -D 9000 -q -C admin@<зарезервированный-ip-адрес>
 
 ### 2.6 Удаление ВМ с веб-сервером <a id="h2-6"/></a>
 
-Удалить ВМ с помощью yc:
+Удалить ВМ с веб-сервером:
 ```bash
 yc compute instance delete --name=lemp-vm
 ```
 
-Проверить, что ВМ успешно удалилась:
+Убедиться, что ВМ успешно удалилась:
 ```bash
 yc compute instance list
 ```

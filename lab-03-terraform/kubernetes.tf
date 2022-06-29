@@ -12,12 +12,12 @@ resource "yandex_kubernetes_cluster" "k8s" {
   master {
     zonal {
       zone = var.zone_id
+      subnet_id = var.subnet_id
     }
     public_ip = false
     version   = "1.21"
   }
 }
-
 
 resource "yandex_kubernetes_node_group" "group_1" {
   cluster_id = yandex_kubernetes_cluster.k8s.id
@@ -55,7 +55,7 @@ resource "yandex_kubernetes_node_group" "group_1" {
     }
 
     metadata = {
-      ssh-keys = file("~/.ssh/id_rsa.pub")
+      ssh-keys = "admin:${file("~/.ssh/id_rsa.pub")}"
     }
   }
 }
