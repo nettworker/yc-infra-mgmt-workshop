@@ -15,6 +15,6 @@
 4. [Инструмент Crossplane](./lab-04-crossplane/README.md)
 5. [Инструмент Pulumi](./lab-05-pulumi/README.md)
 
-Для выполнения задач практикума в рамках выполнения первого практического задания мы развернем виртуальную машину из специального образа [YC Toolbox]() из [магазина приложений Yandex Cloud](https://cloud.yandex.ru/marketplace).
+Для выполнения задач практикума в рамках выполнения первого практического задания мы развернем виртуальную машину из специального образа [Yandex Cloud Toolbox](https://cloud.yandex.ru/marketplace/products/yc/toolbox) из [магазина приложений Yandex Cloud](https://cloud.yandex.ru/marketplace).
 
 Теперь перейдем к выполненю [практического задания 1 >>](./lab-01-ui/README.md).
