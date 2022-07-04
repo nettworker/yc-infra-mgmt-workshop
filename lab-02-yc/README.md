@@ -97,7 +97,7 @@ yc compute instance get --name=infra-vm --format=json | jq
 ssh-keygen -t rsa -b 2048 -f $HOME/.ssh/id_rsa -q -N ""
 ```
 
-Подготовить входные данные для создвания ВМ с веб-сервером
+Подготовить входные данные для создания ВМ с веб-сервером
 ```bash
 YC_ZONE="ru-central1-b"
 YC_NET=$(yc vpc network list --limit=1 --format=json | jq -r .[0].name)
