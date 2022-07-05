@@ -39,7 +39,7 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -s $SUBNET_PREFIX -j MASQUERADE
 yc vpc route-table create --name=default-via-infra-vm --network-name=$NET_NAME --route destination=0.0.0.0/0,next-hop=$META_IP
 ```
 
-Активировать (применить) созданную таблицу маршрутизации к подсети в которой находятся worker nodes кластера Kubernetes:
+Привязать созданную таблицу маршрутизации к подсети в которой находятся worker nodes кластера Kubernetes:
 ```bash
 yc vpc subnet update --name=$SUBNET_NAME --route-table-name=default-via-infra-vm
 ```
@@ -87,6 +87,11 @@ envsubst < vm-inst-tmpl.yml > vm-instance.yml
 Проверить полученный манифест для создания ВМ перед его применением
 ```
 cat vm-instance.yml
+```
+
+Привязать созданную таблицу маршрутизации к подсети в которой находятся worker nodes кластера Kubernetes:
+```bash
+yc vpc subnet update --name=$SUBNET_NAME --route-table-name=default-via-infra-vm
 ```
 
 Создать ВМ с веб-сервером из подготовленного манифеста ВМ
